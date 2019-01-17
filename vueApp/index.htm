@@ -1,0 +1,92 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8">
+<script src="js/vue.js"></script>
+<script src="js/index.js"></script>
+<link href="css/index.css" rel="stylesheet" type="text/css">
+</head><body>
+<div class="cl_menu">
+<a href="#" onclick="fn_getData('data/data1.json');">Data JSON 1</a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#" onclick="fn_getData('data/data2.json');">Data JSON 2</a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#" onclick="fn_getData('data/data3.json');">Data JSON 3</a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#" onclick="fn_getData('data/data4.json');">Data JSON 4</a>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#" onclick="fn_getData('data/data5.json');">Data JSON 5</a>
+</div><br>
+<div id="app" class="cl_box">
+	<div class="cl_div" style="width:56%">
+		<div v-for="(todo,index) in todos" class="cl_todoDiv">
+			<div style="display:inline-block;width:86%;">
+				<strong>~ {{++index}} ~</strong>
+				<div v-for="(key,val,index2) in todo" v-if="val !=='ID'">&nbsp;&nbsp;&nbsp;
+					<div style="display:inline-block;width:120px;"><strong>{{val}}:</strong></div> <div v-bind:id="val+'row_'+index+'_item_'+index2" style="display:inline-block;"><span onclick="fn_editValue(this.parentElement.id);" class="cl_editCell">{{key}}</span></div>
+				</div>
+				<div v-else>&nbsp;&nbsp;&nbsp;
+					<div style="display:inline-block;width:120px;"><strong>{{val}}:</strong></div> <div style="display:inline-block;">{{key}}</div>
+				</div>
+			</div>
+			<div style="display:inline-block;width:10%;">
+				<button style="float:right;" v-on:click="fn_getItem(todo,index,1);">Add To Card</button>
+			</div>
+		</div>
+	</div>
+	<div class="cl_divCard">
+		<div style="border:1px dotted silver;background:rgba(200,150,50,0.2);">
+			<font size="6" color=""><strong>&nbsp;My Card</strong></font>
+			<span id="cardTotal" style="padding:10px;float:right;margin-right:40px;">
+				<font size="5" color=""><strong>Subtotal: {{isTotal | currency}}</strong></font>
+			</span>
+		</div>
+		<div class="cl_cardItems" style="width:100%;">
+			<div v-for="(row,index) in isCard" class="cl_todoDiv">
+				<div v-for="(key,val,index2) in row" v-if="val === 'Sub_Total'">
+					<strong>Total:</strong> {{key | currency}}
+				</div>
+				<div v-else-if="val === 'Quantity'">
+					<strong>Quantity:</strong>&nbsp;&nbsp;&nbsp;
+					<button v-on:click="fn_rmvOne(index);" class="cl_btn"><font size="4"><strong>-</strong></font></button>&nbsp;
+					<div v-bind:id="'idQuan1_'+index" class="cl_quan1" v-on:click="fn_selQuan(index);">{{key}}</div>
+					<div v-bind:id="'idQuan2_'+index" class="cl_quan4" v-on:click="fn_selQuan(index);" v-on:blur="fn_cancelQuan(index);">
+						<div v-for="(n,i) in 100" v-bind:id="'idQuan3_'+n" class="cl_quan5" v-on:click="fn_getNewQuan(n);">{{n}}</div>
+					</div>&nbsp;
+					<button v-on:click="fn_addOne(index);" class="cl_btn"><font size="4">+</font></button>
+				</div>
+				<div v-else-if="val === 'Price'">
+					<strong>Price:</strong> {{key | currency}}</div>
+				<div v-else><strong>{{val}}:</strong> {{key}}</div>
+				<a href="#" style="position:relative;left:200px;" v-on:click="fn_removeFromCard(index)"><font size="3" color="">Remove</font></a>
+			</div>
+		</div>
+	</div>
+</div>
+<input type="text" id="inFocus" onblur="fn_cancelQuan();" class="cl_inputHidden"></body></html>
+<script>
+Vue.filter('currency',function(value){
+  let val = (value/1).toFixed(2).replace(',','.');
+  return '$'+val.toString().replace(/\B(?=(\d{3})+(?!\d))/g,',');})
+
+Vue.filter('capitalize',function(value){
+  if(!value){return '';}
+  value = value.toString()
+  return value.charAt(0).toUpperCase() + value.slice(1);})	
+	
+var isCard = [];
+var isTotal = 0;
+var app = new Vue({
+  el:'#app',
+  data:{
+		todos: [],
+		isCard: isCard,
+		isTotal: isTotal}})
+		
+fn_getData = function(selURL){
+	app.todos = [];
+	fetch(selURL)
+		.then(function(response){
+			return response.json();})
+		.then(function (result){
+			app.todos =  result;});}
+						
+fn_getData('data/data3.json');
+</script>
