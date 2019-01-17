@@ -1,0 +1,30 @@
+[
+   {
+      "Name" : "Mahesh Parashar",
+      "RollNo" : 999,
+      "Percentage" : "80%",
+			"Price" : 44,
+			"Roll":"Manager"
+   },
+   {
+      "Name" : "Dinkar Kad",
+      "RollNo" : 201,
+      "Percentage" : "70%",
+			"Price" : 44,
+			"Roll":"Engineer"
+   },
+   {
+      "Name" : "Robert",
+      "RollNo" : 191,
+      "Percentage" : "75%",
+			"Price" : 44,
+			"Roll":"Tech A"
+   },
+   {
+      "Name" : "Julian Joe",
+      "RollNo" : 111,
+      "Percentage" : "77%",
+			"Price" : 44,
+			"Roll":"Tech B"
+   }
+]
